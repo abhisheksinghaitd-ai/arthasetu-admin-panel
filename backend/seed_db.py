@@ -268,6 +268,16 @@ def main():
 
     db = SessionLocal()
     try:
+        if not reset and db.query(m.AdminUser).first() is not None:
+            # This script now runs on every container start (baked into the
+            # Dockerfile CMD), including free-tier idle-spin-down restarts.
+            # Several seed_* functions below use plain db.add() rather than
+            # merge(), so re-running them against an already-seeded database
+            # would duplicate rows on every restart. Pass --reset to force a
+            # full reseed instead.
+            print("Database already seeded — skipping (pass --reset to force a full reseed).")
+            return
+
         # Order matters: admin_users and schemes/partners before rows that FK to them.
         seed_admin_users(db, load("admin_and_ops.json")["admin_users"])
         seed_schemes(db, load("schemes.json"))
