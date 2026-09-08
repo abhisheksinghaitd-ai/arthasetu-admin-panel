@@ -71,9 +71,7 @@ export default function LoginScreen({ onLogin }) {
         />
         <div className="relative">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[var(--brass)] bg-white/5 text-[18px] font-bold tracking-wide text-[var(--brass)]">
-              AS
-            </div>
+            <img src="/logo.jpeg" alt="ArthaSetu" className="h-12 w-12 rounded-full border-2 border-[var(--brass)] object-cover" />
             <div>
               <div className="text-[15px] font-bold tracking-wide">ArthaSetu</div>
               <div className="text-[12px] text-white/65">Admin Console</div>
@@ -110,9 +108,7 @@ export default function LoginScreen({ onLogin }) {
       <div className="flex min-h-screen flex-1 items-center justify-center px-5 py-10">
         <div className="w-full max-w-[420px]">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[var(--brass)] bg-[var(--brass-soft)] text-[16px] font-bold text-[var(--brass)]">
-              AS
-            </div>
+            <img src="/logo.jpeg" alt="ArthaSetu" className="h-11 w-11 rounded-full border-2 border-[var(--brass)] object-cover" />
             <div>
               <div className="text-[15px] font-bold text-[var(--green-deep)]">ArthaSetu</div>
               <div className="text-[12px] text-[var(--slate)]">Admin Console</div>

@@ -77,9 +77,7 @@ export default function Sidebar({ page, setPage, open, onClose, user, collapsed 
         }
       >
         <div className="flex items-center gap-3 border-b border-white/10 px-5 py-5">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--brass-soft)] text-[13px] font-bold text-[var(--brass)]">
-            AS
-          </div>
+          <img src="/logo.jpeg" alt="ArthaSetu" className="h-9 w-9 shrink-0 rounded-full object-cover" />
           <div>
             <div className="text-[15px] font-bold leading-tight text-white">ArthaSetu</div>
             <div className="text-[10px] tracking-wider text-[#9DBBAC]">ADMIN CONSOLE</div>
