@@ -101,3 +101,46 @@ class SchemeOut(BaseModel):
 # ---------- Grievances ----------
 class GrievanceResolve(BaseModel):
     resolution_note: Optional[str] = None
+
+
+class GrievanceCreateRequest(BaseModel):
+    subject: str
+    description: str
+
+
+# ---------- Public (beneficiary app) ----------
+class BeneficiaryRegisterRequest(BaseModel):
+    phone: str
+    name: str
+    gender: Optional[str] = None
+    state: Optional[str] = None
+    district: Optional[str] = None
+    pincode: Optional[str] = None
+    preferred_language: Optional[str] = None
+    occupation: Optional[str] = None
+    business_type: Optional[str] = None
+    category: Optional[str] = None
+    income_bracket: Optional[str] = None
+    education_level: Optional[str] = None
+
+
+class BeneficiaryOut(BaseModel):
+    user_ref: str
+    phone: str
+    name: str
+    account_status: str
+
+    class Config:
+        from_attributes = True
+
+
+class BeneficiaryRegisterResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: BeneficiaryOut
+
+
+class ApplicationCreateRequest(BaseModel):
+    scheme_id: str
+    partner_ref: int
+    loan_amount_requested: Optional[float] = None

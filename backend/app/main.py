@@ -3,7 +3,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import auth, users, partners, schemes, applications, reports, audit, grievances, dashboard
+from .routers import auth, users, partners, schemes, applications, reports, audit, grievances, dashboard, public
 
 app = FastAPI(
     title="ArthaSetu Admin API",
@@ -30,6 +30,7 @@ app.include_router(applications.router)
 app.include_router(reports.router)
 app.include_router(audit.router)
 app.include_router(grievances.router)
+app.include_router(public.router)
 
 
 @app.get("/")

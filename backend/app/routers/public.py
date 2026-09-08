@@ -1,0 +1,154 @@
+from datetime import datetime
+
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+
+from ..database import get_db
+from ..models import User, ChannelPartner, Application, Grievance
+from ..schemas import (
+    BeneficiaryRegisterRequest,
+    BeneficiaryRegisterResponse,
+    ApplicationCreateRequest,
+    GrievanceCreateRequest,
+)
+from ..auth import create_beneficiary_token, get_current_beneficiary
+
+router = APIRouter(prefix="/public", tags=["public"])
+
+
+@router.post("/register", response_model=BeneficiaryRegisterResponse)
+def register(payload: BeneficiaryRegisterRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.phone == payload.phone).first()
+    if not user:
+        user = User(
+            user_ref=payload.phone,  # temporary placeholder, unique via the phone column; replaced below
+            phone=payload.phone,
+            name=payload.name,
+            gender=payload.gender,
+            state=payload.state,
+            district=payload.district,
+            pincode=payload.pincode,
+            preferred_language=payload.preferred_language,
+            occupation=payload.occupation,
+            business_type=payload.business_type,
+            category=payload.category,
+            income_bracket=payload.income_bracket,
+            education_level=payload.education_level,
+            kyc_status="pending",
+            account_status="active",
+        )
+        db.add(user)
+        db.flush()
+        user.user_ref = f"USR{user.id:04d}"
+        db.commit()
+        db.refresh(user)
+    else:
+        user.name = payload.name
+        user.gender = payload.gender or user.gender
+        user.state = payload.state or user.state
+        user.district = payload.district or user.district
+        user.pincode = payload.pincode or user.pincode
+        user.preferred_language = payload.preferred_language or user.preferred_language
+        user.occupation = payload.occupation or user.occupation
+        user.business_type = payload.business_type or user.business_type
+        user.category = payload.category or user.category
+        user.income_bracket = payload.income_bracket or user.income_bracket
+        user.education_level = payload.education_level or user.education_level
+        user.last_active_at = datetime.utcnow()
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+
+    if user.account_status == "blocked":
+        raise HTTPException(status_code=403, detail="This account has been blocked")
+
+    token = create_beneficiary_token(user.user_ref)
+    return {"access_token": token, "user": user}
+
+
+@router.get("/partners")
+def list_active_partners(state: str = None, db: Session = Depends(get_db)):
+    q = db.query(ChannelPartner).filter(ChannelPartner.status == "active")
+    if state:
+        q = q.filter(ChannelPartner.state == state)
+    rows = q.all()
+    return [{"partner_ref": p.partner_ref, "name": p.name, "state": p.state} for p in rows]
+
+
+@router.post("/applications")
+def create_application(
+    payload: ApplicationCreateRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_beneficiary),
+):
+    partner = db.query(ChannelPartner).filter(
+        ChannelPartner.partner_ref == payload.partner_ref,
+        ChannelPartner.status == "active",
+    ).first()
+    if not partner:
+        raise HTTPException(status_code=404, detail="Partner not found or not active")
+
+    application_ref = f"APP{int(datetime.utcnow().timestamp() * 1000)}"
+    app_row = Application(
+        application_ref=application_ref,
+        user_ref=user.user_ref,
+        scheme_id=payload.scheme_id,
+        partner_ref=payload.partner_ref,
+        status="applied",
+        loan_amount_requested=payload.loan_amount_requested,
+        applied_at=datetime.utcnow(),
+    )
+    db.add(app_row)
+    db.commit()
+    return {
+        "application_ref": application_ref,
+        "status": "applied",
+        "scheme_id": payload.scheme_id,
+        "partner_ref": payload.partner_ref,
+    }
+
+
+@router.get("/applications/mine")
+def list_my_applications(
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_beneficiary),
+):
+    rows = (
+        db.query(Application)
+        .filter(Application.user_ref == user.user_ref)
+        .order_by(Application.matched_at.desc())
+        .all()
+    )
+    return [
+        {
+            "application_ref": a.application_ref,
+            "scheme_id": a.scheme_id,
+            "partner_ref": a.partner_ref,
+            "status": a.status,
+            "loan_amount_requested": float(a.loan_amount_requested) if a.loan_amount_requested is not None else None,
+            "loan_amount_sanctioned": float(a.loan_amount_sanctioned) if a.loan_amount_sanctioned is not None else None,
+            "emi_amount": float(a.emi_amount) if a.emi_amount is not None else None,
+            "applied_at": a.applied_at,
+            "status_updated_at": a.status_updated_at,
+        }
+        for a in rows
+    ]
+
+
+@router.post("/grievances")
+def submit_grievance(
+    payload: GrievanceCreateRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_beneficiary),
+):
+    grievance_ref = f"GRV{int(datetime.utcnow().timestamp() * 1000)}"
+    db.add(Grievance(
+        grievance_ref=grievance_ref,
+        raised_by_type="user",
+        raised_by_id=user.user_ref,
+        subject=payload.subject,
+        description=payload.description,
+        status="open",
+    ))
+    db.commit()
+    return {"grievance_ref": grievance_ref, "status": "open"}

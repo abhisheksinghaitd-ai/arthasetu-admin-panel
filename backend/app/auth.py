@@ -9,7 +9,7 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
 from .database import get_db
-from .models import AdminUser
+from .models import AdminUser, User
 
 SECRET_KEY = os.getenv("JWT_SECRET", "dev-secret-change-in-production-arthasetu")
 ALGORITHM = "HS256"
@@ -92,6 +92,26 @@ def get_current_admin(
     if not admin or not admin.is_active:
         raise HTTPException(status_code=401, detail="Admin not found or inactive")
     return admin
+
+
+def create_beneficiary_token(user_ref: str, expires_minutes: int = ACCESS_TOKEN_EXPIRE_MINUTES * 24) -> str:
+    return create_access_token({"sub": user_ref, "typ": "beneficiary"}, expires_minutes=expires_minutes)
+
+
+def get_current_beneficiary(
+    token: Optional[str] = Depends(oauth2_scheme),
+    db: Session = Depends(get_db),
+) -> User:
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    payload = decode_token(token)
+    if payload.get("typ") != "beneficiary":
+        raise HTTPException(status_code=401, detail="Not a beneficiary token")
+    user_ref = payload.get("sub")
+    user = db.query(User).filter(User.user_ref == user_ref).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    return user
 
 
 def require_permission(perm: str):
