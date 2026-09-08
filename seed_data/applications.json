@@ -1,0 +1,196 @@
+{
+  "applications": [
+    {
+      "application_id": "APP003",
+      "user_id": "USR003",
+      "scheme_id": "NSFDC_MCF_001",
+      "partner_id": 7,
+      "status": "disbursed",
+      "loan_amount_requested": 100000,
+      "loan_amount_sanctioned": 100000,
+      "emi_amount": 2777.78,
+      "tenure_months": 48,
+      "routing_score": 0.6098,
+      "sla_flag": false,
+      "matched_at": "2026-03-10T09:00:00Z",
+      "applied_at": "2026-03-12T10:20:00Z",
+      "status_updated_at": "2026-03-20T13:00:00Z"
+    },
+    {
+      "application_id": "APP011",
+      "user_id": "USR011",
+      "scheme_id": "NSFDC_GBS_008",
+      "partner_id": 9,
+      "status": "under_review",
+      "loan_amount_requested": 100000,
+      "loan_amount_sanctioned": null,
+      "emi_amount": null,
+      "tenure_months": 24,
+      "routing_score": 0.878,
+      "sla_flag": false,
+      "matched_at": "2026-05-09T09:00:00Z",
+      "applied_at": null,
+      "status_updated_at": "2026-05-07T13:00:00Z"
+    },
+    {
+      "application_id": "APP012",
+      "user_id": "USR012",
+      "scheme_id": "NSFDC_UNY_004",
+      "partner_id": 39,
+      "status": "disbursed",
+      "loan_amount_requested": 25000,
+      "loan_amount_sanctioned": 25000,
+      "emi_amount": 757.58,
+      "tenure_months": 60,
+      "routing_score": 0.6547,
+      "sla_flag": false,
+      "matched_at": "2026-06-27T09:00:00Z",
+      "applied_at": null,
+      "status_updated_at": "2026-07-17T13:00:00Z"
+    },
+    {
+      "application_id": "APP014",
+      "user_id": "USR014",
+      "scheme_id": "NSFDC_UNY_004",
+      "partner_id": 7,
+      "status": "under_review",
+      "loan_amount_requested": 75000,
+      "loan_amount_sanctioned": null,
+      "emi_amount": null,
+      "tenure_months": 36,
+      "routing_score": 0.576,
+      "sla_flag": false,
+      "matched_at": "2026-06-03T09:00:00Z",
+      "applied_at": null,
+      "status_updated_at": "2026-04-14T13:00:00Z"
+    },
+    {
+      "application_id": "APP024",
+      "user_id": "USR024",
+      "scheme_id": "NSFDC_UNY_004",
+      "partner_id": 80,
+      "status": "applied",
+      "loan_amount_requested": 150000,
+      "loan_amount_sanctioned": null,
+      "emi_amount": null,
+      "tenure_months": 24,
+      "routing_score": 0.9266,
+      "sla_flag": false,
+      "matched_at": "2026-07-28T09:00:00Z",
+      "applied_at": null,
+      "status_updated_at": "2026-08-15T13:00:00Z"
+    }
+  ],
+  "repayments": [
+    {
+      "application_id": "APP003",
+      "installment_number": 1,
+      "due_date": "2026-04-01",
+      "amount_due": 2777.78,
+      "amount_paid": 2777.78,
+      "paid_date": "2026-04-01",
+      "status": "paid",
+      "days_overdue": 0
+    },
+    {
+      "application_id": "APP003",
+      "installment_number": 2,
+      "due_date": "2026-05-01",
+      "amount_due": 1500,
+      "amount_paid": 0,
+      "paid_date": null,
+      "status": "missed",
+      "days_overdue": 129
+    },
+    {
+      "application_id": "APP003",
+      "installment_number": 3,
+      "due_date": "2026-06-01",
+      "amount_due": 2777.78,
+      "amount_paid": 0,
+      "paid_date": null,
+      "status": "missed",
+      "days_overdue": 69
+    },
+    {
+      "application_id": "APP003",
+      "installment_number": 4,
+      "due_date": "2026-07-01",
+      "amount_due": 2777.78,
+      "amount_paid": 2777.78,
+      "paid_date": "2026-07-09",
+      "status": "paid",
+      "days_overdue": 0
+    },
+    {
+      "application_id": "APP003",
+      "installment_number": 5,
+      "due_date": "2026-08-01",
+      "amount_due": 2777.78,
+      "amount_paid": 0,
+      "paid_date": null,
+      "status": "pending",
+      "days_overdue": 79
+    },
+    {
+      "application_id": "APP003",
+      "installment_number": 6,
+      "due_date": "2026-09-01",
+      "amount_due": 2777.78,
+      "amount_paid": 0,
+      "paid_date": null,
+      "status": "pending",
+      "days_overdue": 15
+    },
+    {
+      "application_id": "APP012",
+      "installment_number": 1,
+      "due_date": "2026-04-01",
+      "amount_due": 757.58,
+      "amount_paid": 0,
+      "paid_date": null,
+      "status": "missed",
+      "days_overdue": 34
+    },
+    {
+      "application_id": "APP012",
+      "installment_number": 2,
+      "due_date": "2026-05-01",
+      "amount_due": 757.58,
+      "amount_paid": 757.58,
+      "paid_date": "2026-05-08",
+      "status": "paid",
+      "days_overdue": 0
+    },
+    {
+      "application_id": "APP012",
+      "installment_number": 3,
+      "due_date": "2026-06-01",
+      "amount_due": 757.58,
+      "amount_paid": 757.58,
+      "paid_date": "2026-06-03",
+      "status": "paid",
+      "days_overdue": 0
+    },
+    {
+      "application_id": "APP012",
+      "installment_number": 4,
+      "due_date": "2026-07-01",
+      "amount_due": 757.58,
+      "amount_paid": 757.58,
+      "paid_date": "2026-07-08",
+      "status": "paid",
+      "days_overdue": 0
+    },
+    {
+      "application_id": "APP012",
+      "installment_number": 5,
+      "due_date": "2026-08-01",
+      "amount_due": 757.58,
+      "amount_paid": 757.58,
+      "paid_date": "2026-08-07",
+      "status": "paid",
+      "days_overdue": 0
+    }
+  ]
+}

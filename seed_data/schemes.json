@@ -1,0 +1,247 @@
+[
+  {
+    "scheme_id": "NSFDC_MCF_001",
+    "scheme_name": "Micro Credit Finance (MCF) Scheme",
+    "category": "Micro-Finance (General)",
+    "target_gender": "All",
+    "max_project_cost_inr": 140000.0,
+    "max_loan_limit_inr": 125000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 6.5,
+    "interest_rate_female_pct": 6.5,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "36",
+    "moratorium_period": "3",
+    "allowed_channel_partners": [
+      "SCA",
+      "PSB",
+      "RRB"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_MSY_002",
+    "scheme_name": "Mahila Samriddhi Yojana (MSY)",
+    "category": "Micro-Finance (Women Only)",
+    "target_gender": "Female",
+    "max_project_cost_inr": 140000.0,
+    "max_loan_limit_inr": 125000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": null,
+    "interest_rate_female_pct": 6.0,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "36",
+    "moratorium_period": "3",
+    "allowed_channel_partners": [
+      "SCA",
+      "PSB",
+      "RRB"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_AMY_003",
+    "scheme_name": "Aajeevika Microfinance Yojana (AMY)",
+    "category": "Micro-Finance (via NBFC-MFIs)",
+    "target_gender": "All",
+    "max_project_cost_inr": 140000.0,
+    "max_loan_limit_inr": 125000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 15.0,
+    "interest_rate_female_pct": 15.0,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "36",
+    "moratorium_period": "3",
+    "allowed_channel_partners": [
+      "NBFC-MFI"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_UNY_004",
+    "scheme_name": "Udyam Nidhi Yojana (UNY)",
+    "category": "Mid-Tier Business",
+    "target_gender": "All",
+    "max_project_cost_inr": 500000.0,
+    "max_loan_limit_inr": 450000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 13.0,
+    "interest_rate_female_pct": 13.0,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "60",
+    "moratorium_period": "3",
+    "allowed_channel_partners": [
+      "SCA",
+      "PSB",
+      "RRB"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_SUD_005",
+    "scheme_name": "Suvidha Loan Scheme",
+    "category": "Mid-Tier Business",
+    "target_gender": "All",
+    "max_project_cost_inr": 1000000.0,
+    "max_loan_limit_inr": 900000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 8.0,
+    "interest_rate_female_pct": 8.0,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "60",
+    "moratorium_period": "12",
+    "allowed_channel_partners": [
+      "SCA",
+      "PSB",
+      "RRB"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_LVY_006",
+    "scheme_name": "Laghu Vyavasay Yojana (LVY)",
+    "category": "Mid-Tier (Urban/Retail)",
+    "target_gender": "All",
+    "max_project_cost_inr": 500000.0,
+    "max_loan_limit_inr": 450000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 8.0,
+    "interest_rate_female_pct": 8.0,
+    "interest_rate_conditional_logic": "6.0% if project cost < 2L, else 8.0% up to 5L",
+    "max_repayment_period_months": "60",
+    "moratorium_period": "6",
+    "allowed_channel_partners": [
+      "SCA",
+      "PSB"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_UTK_007",
+    "scheme_name": "Utkarsh Loan Scheme (Term Loan)",
+    "category": "High-Value Projects",
+    "target_gender": "All",
+    "max_project_cost_inr": 5000000.0,
+    "max_loan_limit_inr": 4500000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 9.0,
+    "interest_rate_female_pct": 9.0,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "84",
+    "moratorium_period": "12",
+    "allowed_channel_partners": [
+      "PSB",
+      "SCA"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_GBS_008",
+    "scheme_name": "Green Business Scheme (GBS)",
+    "category": "Eco-Friendly Assets",
+    "target_gender": "All",
+    "max_project_cost_inr": 3000000.0,
+    "max_loan_limit_inr": 2700000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 6.0,
+    "interest_rate_female_pct": 6.0,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "60",
+    "moratorium_period": "6",
+    "allowed_channel_partners": [
+      "SCA",
+      "PSB",
+      "RRB"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_SUY_009",
+    "scheme_name": "Swachhta Udyami Yojana (SUY)",
+    "category": "Sanitation Workers / SC Entrepreneurs",
+    "target_gender": "All",
+    "max_project_cost_inr": 5000000.0,
+    "max_loan_limit_inr": 4500000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 6.0,
+    "interest_rate_female_pct": 6.0,
+    "interest_rate_conditional_logic": "4.0% for sanitation workers/dependents, 6.0% for other SC",
+    "max_repayment_period_months": "84",
+    "moratorium_period": "6",
+    "allowed_channel_partners": [
+      "SCA",
+      "PSB"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_ELD_010",
+    "scheme_name": "Educational Loan Scheme (Domestic)",
+    "category": "Higher Education (India)",
+    "target_gender": "All",
+    "max_project_cost_inr": null,
+    "max_loan_limit_inr": 3000000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 6.0,
+    "interest_rate_female_pct": 5.5,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "144",
+    "moratorium_period": "Course Duration + 6 Months",
+    "allowed_channel_partners": [
+      "PSB",
+      "SCA",
+      "RRB"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_ELA_011",
+    "scheme_name": "Educational Loan Scheme (Abroad)",
+    "category": "Higher Education (International)",
+    "target_gender": "All",
+    "max_project_cost_inr": null,
+    "max_loan_limit_inr": 4000000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 7.0,
+    "interest_rate_female_pct": 6.5,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "144",
+    "moratorium_period": "Course Duration + 6 Months",
+    "allowed_channel_partners": [
+      "PSB",
+      "SCA"
+    ],
+    "status": "active",
+    "version_no": 1
+  },
+  {
+    "scheme_id": "NSFDC_VET_012",
+    "scheme_name": "Vocational Education & Training Loan Scheme (VETLS)",
+    "category": "Skill / Diploma Courses",
+    "target_gender": "All",
+    "max_project_cost_inr": null,
+    "max_loan_limit_inr": 150000.0,
+    "loan_percentage_cap": 90.0,
+    "interest_rate_male_pct": 6.0,
+    "interest_rate_female_pct": 5.5,
+    "interest_rate_conditional_logic": null,
+    "max_repayment_period_months": "84",
+    "moratorium_period": "Course Duration + 6 Months",
+    "allowed_channel_partners": [
+      "SCA",
+      "PSB"
+    ],
+    "status": "active",
+    "version_no": 1
+  }
+]

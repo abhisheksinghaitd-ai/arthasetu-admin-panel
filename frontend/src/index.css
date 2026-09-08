@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   ArthaSetu design tokens — ported verbatim from the legacy
+   DASHBOARD_CSS :root block (see src/_legacy_reference_DO_NOT_EDIT.jsx).
+   Government-portal palette: deep green sidebar, brass-gold accent,
+   warm paper background, ink text. Do not change these values.
+   --------------------------------------------------------------- */
+:root {
+  --ink: #12201A;
+  --paper: #F7F5F0;
+  --panel: #FFFFFF;
+  --green-deep: #173A2B;
+  --green-mid: #1B4332;
+  --green-soft: #E7EEE9;
+  --sage: #425F52;
+  --sage-line: #D8DED8;
+  --brass: #A9823E;
+  --brass-soft: #F3E9D2;
+  --rust: #8A1F11;
+  --rust-soft: #F7E4E0;
+  --amber: #8A5A11;
+  --amber-soft: #FBEFD9;
+  --slate: #5B6B63;
+  --shadow: 0 1px 2px rgba(18, 32, 26, 0.06), 0 1px 8px rgba(18, 32, 26, 0.04);
+  --shadow-premium: 0 1px 2px rgba(18, 32, 26, 0.05), 0 16px 36px -12px rgba(18, 32, 26, 0.22);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, select, textarea {
+  font-family: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C9D2CB;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Hides the scrollbar track/thumb while keeping the element scrollable
+   — used on the sidebar nav, where the default light scrollbar thumb
+   reads as a stray UI element against the dark green background. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

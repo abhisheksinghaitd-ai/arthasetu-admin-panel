@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: arthasetu-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: arthasetu
+      POSTGRES_PASSWORD: arthasetu_dev_pw
+      POSTGRES_DB: arthasetu
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arthasetu"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: arthasetu-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    container_name: arthasetu-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://arthasetu:arthasetu_dev_pw@postgres:5432/arthasetu
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: dev-secret-change-in-production-arthasetu
+      CORS_ORIGINS: http://localhost:5173,http://localhost:3000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./seed_data:/seed_data
+    command: >
+      sh -c "python seed_db.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+volumes:
+  pgdata:

@@ -1,0 +1,181 @@
+{
+  "admin_users": [
+    {
+      "admin_id": "ADM001",
+      "name": "Priya Sharma",
+      "email": "priya.sharma@arthasetu.gov.in",
+      "role": "Super Admin",
+      "state_scope": null,
+      "mfa_enabled": true,
+      "is_active": true
+    },
+    {
+      "admin_id": "ADM002",
+      "name": "Ravi Kumar",
+      "email": "data.admin@arthasetu.gov.in",
+      "role": "Scheme Manager",
+      "state_scope": null,
+      "mfa_enabled": true,
+      "is_active": true
+    },
+    {
+      "admin_id": "ADM003",
+      "name": "Suresh Iyer",
+      "email": "partner.admin@arthasetu.gov.in",
+      "role": "Partner Relationship Manager",
+      "state_scope": null,
+      "mfa_enabled": false,
+      "is_active": true
+    },
+    {
+      "admin_id": "ADM004",
+      "name": "Fatima Sheikh",
+      "email": "ml.analyst@arthasetu.gov.in",
+      "role": "Compliance / Auditor",
+      "state_scope": null,
+      "mfa_enabled": true,
+      "is_active": true
+    },
+    {
+      "admin_id": "ADM005",
+      "name": "Anjali Nair",
+      "email": "scheme.admin@arthasetu.gov.in",
+      "role": "State/Regional Officer",
+      "state_scope": "Uttar Pradesh",
+      "mfa_enabled": false,
+      "is_active": true
+    },
+    {
+      "admin_id": "ADM006",
+      "name": "Arjun Verma",
+      "email": "viewer@arthasetu.gov.in",
+      "role": "Support Staff",
+      "state_scope": null,
+      "mfa_enabled": false,
+      "is_active": true
+    }
+  ],
+  "audit_log": [
+    {
+      "log_id": "LOG001",
+      "admin_id": "ADM003",
+      "action_type": "block_user",
+      "target_type": "user",
+      "target_id": "USR003",
+      "reason": "Missed 4 consecutive EMIs, overdue 129 days on oldest installment",
+      "metadata": {
+        "overdue_amount": 6000,
+        "scheme_id": "NSFDC_MCF_001",
+        "partner_id": 7
+      },
+      "created_at": "2026-09-02T14:30:00Z"
+    },
+    {
+      "log_id": "LOG002",
+      "admin_id": "ADM003",
+      "action_type": "suspend_partner",
+      "target_type": "partner",
+      "target_id": "7",
+      "reason": "NPA ratio exceeded 15% threshold for two consecutive quarters",
+      "metadata": {
+        "npa_pct": 17.4,
+        "partner_name": "CSCFDC"
+      },
+      "created_at": "2026-09-03T10:15:00Z"
+    },
+    {
+      "log_id": "LOG003",
+      "admin_id": "ADM002",
+      "action_type": "verify_scheme_data",
+      "target_type": "scheme",
+      "target_id": "ALL",
+      "reason": "Scheme Master CSV imported — 12 records matched, 0 changed",
+      "metadata": {},
+      "created_at": "2026-09-04T11:20:00Z"
+    },
+    {
+      "log_id": "LOG004",
+      "admin_id": "ADM001",
+      "action_type": "import_data",
+      "target_type": "partner",
+      "target_id": "ALL",
+      "reason": "Partner Router Master dataset imported — 92 records loaded",
+      "metadata": {},
+      "created_at": "2026-09-04T11:18:00Z"
+    }
+  ],
+  "grievances": [
+    {
+      "grievance_id": "GRV001",
+      "raised_by_type": "user",
+      "raised_by_id": "USR003",
+      "subject": "Dispute account block",
+      "description": "I was unable to pay EMI due to hospitalization in April 2026. Requesting review of block on my account.",
+      "status": "open",
+      "assigned_admin_id": "ADM006",
+      "resolved_at": null,
+      "created_at": "2026-09-03T08:00:00Z"
+    },
+    {
+      "grievance_id": "GRV002",
+      "raised_by_type": "partner",
+      "raised_by_id": "7",
+      "subject": "Dispute NPA suspension",
+      "description": "CSCFDC disputes the NPA calculation period used for suspension and requests a recomputation with Q2 restructured accounts excluded.",
+      "status": "open",
+      "assigned_admin_id": "ADM004",
+      "resolved_at": null,
+      "created_at": "2026-09-03T11:30:00Z"
+    }
+  ],
+  "notifications": [
+    {
+      "recipient_type": "admin",
+      "recipient_id": "ALL",
+      "message": "12 NSFDC schemes confirmed against source CSV — no changes detected.",
+      "channel": "in_app",
+      "sent_at": "2026-09-04T09:14:00Z",
+      "read_at": null
+    },
+    {
+      "recipient_type": "admin",
+      "recipient_id": "ALL",
+      "message": "92 of 92 channel partners have no verified latitude/longitude on file.",
+      "channel": "in_app",
+      "sent_at": "2026-09-04T09:00:00Z",
+      "read_at": null
+    },
+    {
+      "recipient_type": "admin",
+      "recipient_id": "ALL",
+      "message": "All 92 partner records carry source active_status = UNKNOWN — review required.",
+      "channel": "in_app",
+      "sent_at": "2026-09-04T08:55:00Z",
+      "read_at": null
+    },
+    {
+      "recipient_type": "admin",
+      "recipient_id": "ALL",
+      "message": "Partner Router ranking model status: NOT AVAILABLE (prototype only).",
+      "channel": "in_app",
+      "sent_at": "2026-09-03T17:20:00Z",
+      "read_at": null
+    },
+    {
+      "recipient_type": "user",
+      "recipient_id": "USR003",
+      "message": "Your account has been blocked due to missed EMI payments. Raise a grievance if you believe this is an error.",
+      "channel": "sms",
+      "sent_at": "2026-09-02T14:35:00Z",
+      "read_at": null
+    },
+    {
+      "recipient_type": "partner",
+      "recipient_id": "7",
+      "message": "Your partner status has been suspended due to NPA ratio exceeding threshold.",
+      "channel": "email",
+      "sent_at": "2026-09-03T10:20:00Z",
+      "read_at": null
+    }
+  ]
+}
