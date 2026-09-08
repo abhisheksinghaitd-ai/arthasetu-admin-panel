@@ -144,3 +144,15 @@ class ApplicationCreateRequest(BaseModel):
     scheme_id: str
     partner_ref: int
     loan_amount_requested: Optional[float] = None
+
+
+class MatchRuleResult(BaseModel):
+    statement: str
+    clause: str
+    passed: bool
+
+
+class MatchDecisionCreateRequest(BaseModel):
+    scheme_id: str
+    matched: bool
+    rules: List[MatchRuleResult]

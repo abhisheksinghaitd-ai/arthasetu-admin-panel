@@ -4,12 +4,13 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import User, ChannelPartner, Application, Grievance
+from ..models import User, ChannelPartner, Application, Grievance, AuditLog
 from ..schemas import (
     BeneficiaryRegisterRequest,
     BeneficiaryRegisterResponse,
     ApplicationCreateRequest,
     GrievanceCreateRequest,
+    MatchDecisionCreateRequest,
 )
 from ..auth import create_beneficiary_token, get_current_beneficiary
 
@@ -133,6 +134,29 @@ def list_my_applications(
         }
         for a in rows
     ]
+
+
+@router.post("/audit/match-decision")
+def submit_match_decision(
+    payload: MatchDecisionCreateRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_beneficiary),
+):
+    db.add(AuditLog(
+        log_ref=f"LOG{int(datetime.utcnow().timestamp() * 1000)}",
+        admin_ref=None,
+        action_type="scheme_match_shown",
+        target_type="scheme_match",
+        target_id=f"{user.user_ref}:{payload.scheme_id}",
+        reason="Matched" if payload.matched else "Not matched",
+        metadata_json={
+            "scheme_id": payload.scheme_id,
+            "matched": payload.matched,
+            "rules": [r.model_dump() for r in payload.rules],
+        },
+    ))
+    db.commit()
+    return {"status": "logged"}
 
 
 @router.post("/grievances")
