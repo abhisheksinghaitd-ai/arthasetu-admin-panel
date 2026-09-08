@@ -73,7 +73,17 @@ def list_active_partners(state: str = None, db: Session = Depends(get_db)):
     if state:
         q = q.filter(ChannelPartner.state == state)
     rows = q.all()
-    return [{"partner_ref": p.partner_ref, "name": p.name, "state": p.state} for p in rows]
+    return [
+        {
+            "partner_ref": p.partner_ref,
+            "name": p.name,
+            "type": p.type,
+            "state": p.state,
+            "address": p.address,
+            "corporation": p.corporation,
+        }
+        for p in rows
+    ]
 
 
 @router.post("/applications")
