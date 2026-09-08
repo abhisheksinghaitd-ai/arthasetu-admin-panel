@@ -81,7 +81,8 @@ Grievances to see the same story from each angle.
                       MiniDonut, ConfirmModal, Drawer, Chip, PageHeader)
     lib/              rbac.js, demoData.js, format.js
     api.js            Backend API client
-/seed_data          Real NSFDC data + generated demo data (JSON)
+  seed_data/        Real NSFDC data + generated demo data (JSON) — lives
+                     inside backend/ so it's part of the Docker build context
 docker-compose.yml  Postgres + Redis + FastAPI, one command to run
 ```
 

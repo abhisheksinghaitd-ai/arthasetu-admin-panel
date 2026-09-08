@@ -1,7 +1,7 @@
 """
 Seed script for ArthaSetu Admin Panel.
 
-Reads /seed_data/*.json (real NSFDC scheme + partner data, plus demo
+Reads seed_data/*.json (real NSFDC scheme + partner data, plus demo
 users/applications/admin data) and loads it into PostgreSQL.
 
 Usage:
@@ -19,7 +19,7 @@ from app.database import Base, engine, SessionLocal  # noqa: E402
 from app import models as m  # noqa: E402
 from app.auth import hash_password  # noqa: E402
 
-SEED_DIR = os.path.join(os.path.dirname(__file__), "..", "seed_data")
+SEED_DIR = os.path.join(os.path.dirname(__file__), "seed_data")
 
 
 def load(fname):
