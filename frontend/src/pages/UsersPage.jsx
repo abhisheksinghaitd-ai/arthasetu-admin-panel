@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { api } from "../api.js";
 import PageHeader from "../components/PageHeader.jsx";
 import DataTable from "../components/DataTable.jsx";
 import Chip from "../components/Chip.jsx";
@@ -26,10 +28,57 @@ const COLUMNS = [
   { key: "created_at", label: "Registered On" },
 ];
 
+function capitalize(s) {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
+function mapUser(u) {
+  return {
+    user_id: u.user_ref,
+    name: u.name,
+    phone: u.phone,
+    state: u.state || "—",
+    district: u.district || "—",
+    kyc_status: capitalize(u.kyc_status) || "Pending",
+    account_status: (u.account_status || "active").toUpperCase(),
+    risk_level: capitalize(u.risk_level) || "Low",
+    created_at: u.created_at ? String(u.created_at).slice(0, 10) : "",
+  };
+}
+
 /* ---------------------------------------------------------------
    UsersPage — citizen (applicant-facing app) user accounts. No props.
    --------------------------------------------------------------- */
 export default function UsersPage() {
+  const [rows, setRows] = useState(DEMO_USERS);
+  const [loading, setLoading] = useState(true);
+  const [offline, setOffline] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const data = await api.listUsers({ page_size: 200 });
+        if (!cancelled) {
+          setRows(data.results.map(mapUser));
+          setOffline(false);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setOffline(true);
+          setRows(DEMO_USERS);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div>
       <PageHeader
@@ -37,11 +86,16 @@ export default function UsersPage() {
         breadcrumb={["Users", "Users"]}
         description="End-user accounts for the ArthaSetu citizen-facing application."
       />
+      {offline && (
+        <div className="mb-4 rounded border border-[var(--sage-line)] bg-[var(--amber-soft)] px-4 py-3 text-[13.5px] text-[var(--amber)]">
+          Backend not reachable — showing local demo users.
+        </div>
+      )}
 
       <DataTable
         title="users"
         columns={COLUMNS}
-        rows={DEMO_USERS}
+        rows={rows}
         rowKey="user_id"
         pageSize={10}
         searchFields={["user_id", "name", "phone", "state", "district"]}

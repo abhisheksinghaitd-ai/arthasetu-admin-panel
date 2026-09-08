@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { setAuthToken } from "./api.js";
+import { setAuthToken, loadStoredToken } from "./api.js";
 import { PARTNERS, AUDIT_LOG_SEED, NOTIFICATIONS } from "./lib/demoData.js";
 
 import Sidebar from "./components/Sidebar.jsx";
@@ -34,7 +34,20 @@ function loadStoredUser() {
   try {
     if (localStorage.getItem(AUTH_FLAG_KEY) !== "true") return null;
     const raw = localStorage.getItem(AUTH_USER_KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    const user = JSON.parse(raw);
+
+    const token = loadStoredToken();
+    if (user.adminRef && !token) {
+      // A real (non-demo-mode) login was remembered, but its bearer token
+      // only lives in sessionStorage, which doesn't survive a browser
+      // restart. Without it every admin API call would 401 and silently
+      // fall back to demo data, so force a fresh login instead.
+      localStorage.removeItem(AUTH_FLAG_KEY);
+      localStorage.removeItem(AUTH_USER_KEY);
+      return null;
+    }
+    return user;
   } catch {
     return null;
   }
