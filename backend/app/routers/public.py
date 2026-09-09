@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..database import get_db
@@ -84,6 +85,20 @@ def list_active_partners(state: str = None, db: Session = Depends(get_db)):
         }
         for p in rows
     ]
+
+
+@router.get("/scheme-stats")
+def scheme_stats(db: Session = Depends(get_db)):
+    """Real application counts per scheme — no PII, just an aggregate count,
+    so it's safe to expose without auth. Used to show a genuine 'X people
+    have applied for this scheme through ArthaSetu' figure instead of a
+    made-up impact number."""
+    rows = (
+        db.query(Application.scheme_id, func.count(Application.id))
+        .group_by(Application.scheme_id)
+        .all()
+    )
+    return {scheme_id: count for scheme_id, count in rows}
 
 
 @router.post("/applications")
