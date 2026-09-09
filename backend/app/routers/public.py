@@ -22,7 +22,7 @@ from ..auth import create_beneficiary_token, get_current_beneficiary
 router = APIRouter(prefix="/public", tags=["public"])
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 
@@ -91,12 +91,16 @@ def chat(payload: ChatRequest):
             },
             timeout=20.0,
         )
-        resp.raise_for_status()
-        data = resp.json()
-        reply = data["choices"][0]["message"]["content"].strip()
-    except httpx.HTTPError:
+    except httpx.RequestError as exc:
+        print(f"[saathi-chat] request to Groq failed: {exc!r}")
         raise HTTPException(status_code=502, detail="Saathi is unavailable right now, please try again")
 
+    if resp.status_code >= 400:
+        print(f"[saathi-chat] Groq returned {resp.status_code}: {resp.text}")
+        raise HTTPException(status_code=502, detail=f"Saathi backend error ({resp.status_code}): {resp.text}")
+
+    data = resp.json()
+    reply = data["choices"][0]["message"]["content"].strip()
     return {"reply": reply}
 
 
