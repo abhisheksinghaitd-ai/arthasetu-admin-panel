@@ -231,24 +231,24 @@ def nearby_bank_branches(
     )
 
     # Every branch's coordinates are only a city-level approximation (see
-    # location_precision), so branches in the same city are literally
-    # equidistant from any query point. Without this cap, a single large
-    # city can fill every slot with an identical distance, which reads as
-    # broken even though the number is technically correct. Capping per-city
-    # results forces genuine geographic spread across nearby cities instead.
-    MAX_PER_CITY = 3
-    diversified = []
-    city_counts: dict = {}
+    # location_precision), so multiple branches in the same city (or in two
+    # differently-spelled entries for the same real place) land on the exact
+    # same distance. Showing five identical distances reads as broken even
+    # though each number is technically correct, so only the first (nearest-
+    # ranked) branch at each distinct distance is kept — the rest are real
+    # branches too, just not shown here since they wouldn't add new distance
+    # information.
+    seen_distances = set()
+    deduped = []
     for r in ranked:
-        city_key = (r["city"] or "").strip().upper()
-        if city_counts.get(city_key, 0) >= MAX_PER_CITY:
+        if r["distance_km"] in seen_distances:
             continue
-        diversified.append(r)
-        city_counts[city_key] = city_counts.get(city_key, 0) + 1
-        if len(diversified) >= limit:
+        seen_distances.add(r["distance_km"])
+        deduped.append(r)
+        if len(deduped) >= limit:
             break
 
-    return diversified
+    return deduped
 
 
 @router.get("/scheme-stats")
