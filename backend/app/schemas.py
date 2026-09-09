@@ -156,3 +156,35 @@ class MatchDecisionCreateRequest(BaseModel):
     scheme_id: str
     matched: bool
     rules: List[MatchRuleResult]
+
+
+# ---------- Saathi chat ----------
+class ChatSchemeContext(BaseModel):
+    name: str
+    overview: str
+    keyBenefits: List[str]
+    eligibilityList: List[str]
+    howToApply: List[str]
+    rate: str
+    tenure: str
+
+
+class ChatEligibilityContext(BaseModel):
+    matched: bool
+    rules: List[MatchRuleResult]
+
+
+class ChatMessage(BaseModel):
+    role: str  # "user" or "assistant"
+    content: str
+
+
+class ChatRequest(BaseModel):
+    message: str
+    scheme: Optional[ChatSchemeContext] = None
+    eligibility: Optional[ChatEligibilityContext] = None
+    history: List[ChatMessage] = []
+
+
+class ChatResponse(BaseModel):
+    reply: str

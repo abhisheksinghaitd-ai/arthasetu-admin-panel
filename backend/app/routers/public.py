@@ -1,5 +1,7 @@
+import os
 from datetime import datetime
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -12,10 +14,90 @@ from ..schemas import (
     ApplicationCreateRequest,
     GrievanceCreateRequest,
     MatchDecisionCreateRequest,
+    ChatRequest,
+    ChatResponse,
 )
 from ..auth import create_beneficiary_token, get_current_beneficiary
 
 router = APIRouter(prefix="/public", tags=["public"])
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+
+
+def build_saathi_system_prompt(payload: ChatRequest) -> str:
+    lines = [
+        "You are Saathi, a warm, patient assistant inside the ArthaSetu app, "
+        "helping Scheduled Caste entrepreneurs and students in India understand "
+        "NSFDC government loan schemes.",
+        "Keep answers short, simple, and kind — many users have low literacy "
+        "and are not fluent in English. Avoid jargon.",
+        "Never suggest uploading documents, certificates, or photos, and never "
+        "mention WhatsApp or any third-party app — this app does not support that.",
+        "If a question falls outside NSFDC schemes or this app, gently redirect "
+        "the user back to what you can help with.",
+    ]
+
+    if payload.scheme:
+        s = payload.scheme
+        lines.append(
+            "\nHere is the VERIFIED information about the scheme the user is asking "
+            "about. Never contradict it or invent numbers, rates, or rules beyond it:\n"
+            f"Scheme name: {s.name}\n"
+            f"Overview: {s.overview}\n"
+            f"Published eligibility criteria: {'; '.join(s.eligibilityList)}\n"
+            f"Key benefits: {'; '.join(s.keyBenefits)}\n"
+            f"How to apply: {'; '.join(s.howToApply)}\n"
+            f"Interest rate: {s.rate}\n"
+            f"Repayment tenure: {s.tenure}"
+        )
+
+    if payload.eligibility:
+        e = payload.eligibility
+        rule_lines = "\n".join(
+            f"- {r.statement} ({r.clause}): {'PASSED' if r.passed else 'NOT MET'}"
+            for r in e.rules
+        )
+        lines.append(
+            "\nThis user's personal eligibility for this scheme has ALREADY been "
+            "checked by our rule engine. Never recompute it or state a different "
+            f"verdict — just explain it if asked:\n"
+            f"Overall result: {'ELIGIBLE' if e.matched else 'NOT ELIGIBLE'}\n"
+            f"{rule_lines}"
+        )
+
+    return "\n".join(lines)
+
+
+@router.post("/chat", response_model=ChatResponse)
+def chat(payload: ChatRequest):
+    if not GROQ_API_KEY:
+        raise HTTPException(status_code=503, detail="Chat is not configured")
+
+    messages = [{"role": "system", "content": build_saathi_system_prompt(payload)}]
+    messages.extend({"role": m.role, "content": m.content} for m in payload.history)
+    messages.append({"role": "user", "content": payload.message})
+
+    try:
+        resp = httpx.post(
+            GROQ_URL,
+            headers={"Authorization": f"Bearer {GROQ_API_KEY}"},
+            json={
+                "model": GROQ_MODEL,
+                "messages": messages,
+                "temperature": 0.4,
+                "max_tokens": 500,
+            },
+            timeout=20.0,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        reply = data["choices"][0]["message"]["content"].strip()
+    except httpx.HTTPError:
+        raise HTTPException(status_code=502, detail="Saathi is unavailable right now, please try again")
+
+    return {"reply": reply}
 
 
 @router.post("/register", response_model=BeneficiaryRegisterResponse)
