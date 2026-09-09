@@ -37,6 +37,11 @@ def build_saathi_system_prompt(payload: ChatRequest) -> str:
         "mention WhatsApp or any third-party app — this app does not support that.",
         "If a question falls outside NSFDC schemes or this app, gently redirect "
         "the user back to what you can help with.",
+        "You are replying inside a narrow mobile chat bubble. Use short paragraphs "
+        "and simple markdown (headings, bold, bullet lists) freely, but avoid "
+        "markdown tables — they don't fit a narrow chat bubble well. When you'd "
+        "normally reach for a table, use a short bulleted list instead, one "
+        "point per line.",
     ]
 
     if payload.scheme:
