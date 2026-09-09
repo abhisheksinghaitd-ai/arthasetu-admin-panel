@@ -99,7 +99,7 @@ def chat(payload: ChatRequest):
                 "model": GROQ_MODEL,
                 "messages": messages,
                 "temperature": 0.4,
-                "max_tokens": 500,
+                "max_tokens": 1024,
             },
             timeout=20.0,
         )
