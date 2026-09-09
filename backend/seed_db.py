@@ -115,6 +115,28 @@ def seed_partners(db, data):
     db.commit()
 
 
+def seed_bank_branches(db, data):
+    print(f"Seeding {len(data)} bank_branches...")
+    for r in data:
+        db.add(m.BankBranch(
+            ifsc=r["ifsc"],
+            bank_name=r["bank_name"],
+            bank_code=r.get("bank_code"),
+            branch=r.get("branch"),
+            address=r.get("address"),
+            city=r.get("city"),
+            district=r.get("district"),
+            state=r.get("state"),
+            lat=r.get("lat"),
+            lng=r.get("lng"),
+            geocode_source=r.get("geocode_source"),
+            micr=r.get("micr"),
+            contact=r.get("contact"),
+            data_source=r.get("source"),
+        ))
+    db.commit()
+
+
 def seed_partner_performance(db, data):
     print(f"Seeding {len(data)} partner_performance rows...")
     for r in data:
@@ -259,6 +281,8 @@ def seed_admin_ops(db, data):
 
 def main():
     reset = "--reset" in sys.argv
+    only_bank_branches = "--only-bank-branches" in sys.argv
+
     if reset:
         print("Dropping all tables...")
         Base.metadata.drop_all(bind=engine)
@@ -268,6 +292,17 @@ def main():
 
     db = SessionLocal()
     try:
+        if only_bank_branches:
+            # Backfills just the new bank_branches table on an already-seeded
+            # database, without touching (or requiring a --reset wipe of)
+            # anything else.
+            if db.query(m.BankBranch).first() is not None:
+                print("bank_branches already has data — skipping (drop the table manually to force a reseed).")
+                return
+            seed_bank_branches(db, load("bank_branches_up.json"))
+            print("\nbank_branches seed complete.")
+            return
+
         if not reset and db.query(m.AdminUser).first() is not None:
             # This script now runs on every container start (baked into the
             # Dockerfile CMD), including free-tier idle-spin-down restarts.
@@ -282,6 +317,7 @@ def main():
         seed_admin_users(db, load("admin_and_ops.json")["admin_users"])
         seed_schemes(db, load("schemes.json"))
         seed_partners(db, load("channel_partners.json"))
+        seed_bank_branches(db, load("bank_branches_up.json"))
         seed_partner_performance(db, load("partner_performance.json"))
         seed_users(db, load("users.json"))
         seed_applications(db, load("applications.json"))

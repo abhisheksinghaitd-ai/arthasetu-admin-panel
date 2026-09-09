@@ -1,3 +1,4 @@
+import math
 import os
 from datetime import datetime
 
@@ -7,7 +8,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import User, ChannelPartner, Application, Grievance, AuditLog
+from ..models import User, ChannelPartner, BankBranch, Application, Grievance, AuditLog
 from ..schemas import (
     BeneficiaryRegisterRequest,
     BeneficiaryRegisterResponse,
@@ -183,6 +184,52 @@ def list_active_partners(state: str = None, db: Session = Depends(get_db)):
         }
         for p in rows
     ]
+
+
+@router.get("/bank-branches/nearby")
+def nearby_bank_branches(
+    lat: float,
+    lng: float,
+    limit: int = 10,
+    bank_name: str = None,
+    db: Session = Depends(get_db),
+):
+    """Nearest PSU bank branches to a point, ranked by straight-line distance.
+    These are raw IFSC-directory branches, not NSFDC-empanelled channel
+    partners — kept in a separate table so the two are never conflated."""
+    q = db.query(BankBranch).filter(BankBranch.lat.isnot(None), BankBranch.lng.isnot(None))
+    if bank_name:
+        q = q.filter(BankBranch.bank_name.ilike(f"%{bank_name}%"))
+    rows = q.all()
+
+    R_KM = 6371.0
+
+    def haversine_km(lat1, lng1, lat2, lng2):
+        p1, p2 = math.radians(lat1), math.radians(lat2)
+        dphi = math.radians(lat2 - lat1)
+        dlambda = math.radians(lng2 - lng1)
+        a = math.sin(dphi / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dlambda / 2) ** 2
+        return 2 * R_KM * math.asin(math.sqrt(a))
+
+    ranked = sorted(
+        (
+            {
+                "ifsc": b.ifsc,
+                "bank_name": b.bank_name,
+                "branch": b.branch,
+                "address": b.address,
+                "city": b.city,
+                "district": b.district,
+                "state": b.state,
+                "contact": b.contact,
+                "distance_km": round(haversine_km(lat, lng, float(b.lat), float(b.lng)), 2),
+                "location_precision": b.geocode_source,  # 'city' = approximate, not exact branch geocode
+            }
+            for b in rows
+        ),
+        key=lambda r: r["distance_km"],
+    )
+    return ranked[:limit]
 
 
 @router.get("/scheme-stats")

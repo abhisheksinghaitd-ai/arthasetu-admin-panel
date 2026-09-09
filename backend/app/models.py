@@ -122,6 +122,31 @@ class ChannelPartner(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
 
 
+class BankBranch(Base):
+    """Real PSU bank branches (IFSC directory), used only to suggest the
+    nearest physical branch to a user by distance — NOT NSFDC-empanelled
+    channel partners, so this is deliberately a separate table from
+    ChannelPartner and must never be presented as an official partner."""
+    __tablename__ = "bank_branches"
+
+    id = Column(Integer, primary_key=True)
+    ifsc = Column(String(11), unique=True, nullable=False)
+    bank_name = Column(String(120), nullable=False)
+    bank_code = Column(String(10))
+    branch = Column(String(200))
+    address = Column(Text)
+    city = Column(String(100))
+    district = Column(String(100))
+    state = Column(String(60))
+    lat = Column(Numeric(9, 6))
+    lng = Column(Numeric(9, 6))
+    geocode_source = Column(String(20))  # 'city' | null (ungeocoded)
+    micr = Column(String(11))
+    contact = Column(String(30))
+    data_source = Column(String(20))  # 'razorpay' | 'csv_fallback'
+    created_at = Column(TIMESTAMP, server_default=func.now())
+
+
 class PartnerPerformance(Base):
     __tablename__ = "partner_performance"
 
